@@ -921,7 +921,7 @@ function doScrollCheck() {
 var isArguments = (function( undefined ) {
 
 	var ostr = toString,
-		// To be sure it will be called (future engines).
+		// To be sure it will not be inlined (future engines).
 		returnTrue = function() { return arguments !== undefined; },
 		ARGS = ostr.call( arguments );
 
