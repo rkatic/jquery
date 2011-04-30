@@ -646,18 +646,27 @@ jQuery.extend({
 	makeArray: function( array, results ) {
 		var ret = results || [];
 
-		if ( array != null ) {
-			// The window, strings (and functions) also have 'length'
-			// The extra typeof function check is to prevent crashes
-			// in Safari 2 (See: #3039)
-			// Tweaked logic slightly to handle Blackberry 4.7 RegExp issues #6930
-			var type = jQuery.type( array );
+		if ( array == null ) {
+			return ret;
+		}
 
-			if ( array.length == null || type === "string" || type === "function" || type === "regexp" || jQuery.isWindow( array ) ) {
-				push.call( ret, array );
-			} else {
-				jQuery.merge( ret, array );
-			}
+		var type = jQuery.type( array );
+
+		if ( array.length != null && ( array instanceof jQuery || type === "object" && !jQuery.isWindow( array ) && (
+			// form - is it really needed?
+			array.nodeType && /form/i.test( array.nodeName ) ||
+			// NodeList
+			array.item && ( array.namedItem || jQuery.isFunction( array.item ) ) ||
+			// iframe jQuery
+			array.jquery && !jQuery.isPlainObject( array ) ) )
+		) {
+			jQuery.merge( ret, array );
+
+		} else if ( type === "array" || isArguments( array ) ) {
+			push.apply( ret, array );
+
+		} else {
+			push.call( ret, array );
 		}
 
 		return ret;
@@ -908,6 +917,31 @@ function doScrollCheck() {
 	// and execute any waiting functions
 	jQuery.ready();
 }
+
+var isArguments = (function( undefined ) {
+
+	var ostr = ({}).toString,
+		ARGS = ostr.call( arguments );
+
+	return ARGS === "[object Arguments]" ?
+		function( obj ) {
+			return obj != null && ostr.call( obj ) === ARGS;
+		} :
+		function( obj ) {
+			if ( obj == null || obj.length === undefined || ostr.call( obj ) !== ARGS ) {
+				return false;
+			}
+
+			try {
+				var arr = [];
+				arr.push.apply( arr, obj );
+				return true;
+
+			} catch (e) {
+				return false;
+			}
+		};
+})();
 
 // Expose jQuery to the global object
 return jQuery;
