@@ -920,7 +920,7 @@ function doScrollCheck() {
 
 var isArguments = (function( undefined ) {
 
-	var ostr = ({}).toString,
+	var ostr = toString,
 		noop = function() { },
 		ARGS = ostr.call( arguments );
 
