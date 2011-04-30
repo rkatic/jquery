@@ -922,7 +922,7 @@ var isArguments = (function( undefined ) {
 
 	var ostr = toString,
 		// To be sure it will be called (future engines).
-		returnTrue = function() { return true },
+		returnTrue = function() { return arguments !== undefined; },
 		ARGS = ostr.call( arguments );
 
 	return ARGS === "[object Arguments]" ?
