@@ -877,7 +877,7 @@ test("jQuery.each(Object,Function)", function() {
 });
 
 test("jQuery.makeArray", function(){
-	expect(14);
+	expect(16);
 
 	equals( jQuery.makeArray(jQuery("html>*"))[0].nodeName.toUpperCase(), "HEAD", "Pass makeArray a jQuery object" );
 
@@ -914,6 +914,14 @@ test("jQuery.makeArray", function(){
 	// For #5610
 	//same( jQuery.makeArray({length: "0"}), [], "Make sure object is coerced properly.");
 	//same( jQuery.makeArray({length: "5"}), [], "Make sure object is coerced properly.");
+
+	// For #8104
+	function Klass( n ) {
+		this.length = n;
+	}
+	equals( jQuery.makeArray( new Klass(0) ).length, 1, "Make sure class instances are not considered arrays" );
+	equals( jQuery.makeArray( new Klass(3) ).length, 1, "Make sure class instances are not considered arrays" );
+
 });
 
 test("jQuery.isEmptyObject", function(){
