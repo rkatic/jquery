@@ -921,8 +921,8 @@ function doScrollCheck() {
 var isArguments = (function( undefined ) {
 
 	var ostr = toString,
-		// To be sure it will be colled (future engines).
-		test = function() { return true },
+		// To be sure it will be called (future engines).
+		returnTrue = function() { return true },
 		ARGS = ostr.call( arguments );
 
 	return ARGS === "[object Arguments]" ?
@@ -932,7 +932,7 @@ var isArguments = (function( undefined ) {
 		function( obj ) {
 			if ( obj != null && obj.length !== undefined && ostr.call( obj ) === ARGS ) {
 				try {
-					return test.apply( this, obj );
+					return returnTrue.apply( this, obj );
 				} catch (e) {}
 			}
 			return false;
