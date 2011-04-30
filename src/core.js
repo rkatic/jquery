@@ -921,6 +921,7 @@ function doScrollCheck() {
 var isArguments = (function( undefined ) {
 
 	var ostr = ({}).toString,
+		noop = function() { },
 		ARGS = ostr.call( arguments );
 
 	return ARGS === "[object Arguments]" ?
@@ -933,8 +934,7 @@ var isArguments = (function( undefined ) {
 			}
 
 			try {
-				var arr = [];
-				arr.push.apply( arr, obj );
+				noop.apply( this, obj );
 				return true;
 
 			} catch (e) {
