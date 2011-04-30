@@ -929,17 +929,13 @@ var isArguments = (function( undefined ) {
 			return obj != null && ostr.call( obj ) === ARGS;
 		} :
 		function( obj ) {
-			if ( obj == null || obj.length === undefined || ostr.call( obj ) !== ARGS ) {
-				return false;
+			if ( obj != null && obj.length !== undefined && ostr.call( obj ) === ARGS ) {
+				try {
+					noop.apply( this, obj );
+					return true;
+				} catch (e) {}
 			}
-
-			try {
-				noop.apply( this, obj );
-				return true;
-
-			} catch (e) {
-				return false;
-			}
+			return false;
 		};
 })();
 
