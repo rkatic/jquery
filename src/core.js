@@ -65,7 +65,23 @@ var jQuery = function( selector, context ) {
 	indexOf = Array.prototype.indexOf,
 
 	// [[Class]] -> type pairs
-	class2type = {};
+	class2type = {},
+
+	// FREE IF PULL #366 WILL BE MERGED
+	argsRudeCheck = (function(){
+		var	ARGS = toString.call( arguments ),
+			// To be sure it will not be inlined (future engines).
+			returnTrue = function() { return arguments !== 0; };
+
+		return function( cls, obj ) {
+			if ( cls === ARGS ) {
+				try {
+					return returnTrue.apply( this, obj );
+				} catch (e) {}
+			}
+			return false;
+		};
+	})();
 
 jQuery.fn = jQuery.prototype = {
 	constructor: jQuery,
@@ -648,22 +664,28 @@ jQuery.extend({
 
 		if ( array == null ) {
 			return ret;
+
+		} else if ( array.length == null ) {
+			push.call( ret, array );
+			return ret;
 		}
 
-		var type = jQuery.type( array );
+		var cls = toString.call( array );
 
-		if ( array.length != null && ( array instanceof jQuery || type === "object" && !jQuery.isWindow( array ) && (
-			// form - is it really needed?
-			array.nodeType && /form/i.test( array.nodeName ) ||
+		if ( cls === "[object Array]" || cls === "[object Arguments]" ) {
+			push.apply( ret, array );
+
+		} else if ( array instanceof jQuery || !( cls in class2type ) && !jQuery.isWindow( array ) && (
+			// form,..
+			array.nodeType ||
 			// NodeList
 			array.item && ( array.namedItem || jQuery.isFunction( array.item ) ) ||
-			// iframe jQuery
-			array.jquery && !jQuery.isPlainObject( array ) ) )
+			// jQuery-like
+			array.jquery && !jQuery.isPlainObject( array ) ||
+			// arguments
+			argsRudeCheck( cls, array ) )
 		) {
 			jQuery.merge( ret, array );
-
-		} else if ( type === "array" || isArguments( array ) ) {
-			push.apply( ret, array );
 
 		} else {
 			push.call( ret, array );
@@ -857,8 +879,8 @@ jQuery.extend({
 	browser: {}
 });
 
-// Populate the class2type map
-jQuery.each("Boolean Number String Function Array Date RegExp Object".split(" "), function(i, name) {
+// Populate the class2type map. Don't add Object!
+jQuery.each("Boolean Number String Function Array Date RegExp".split(" "), function(i, name) {
 	class2type[ "[object " + name + "]" ] = name.toLowerCase();
 });
 
@@ -917,27 +939,6 @@ function doScrollCheck() {
 	// and execute any waiting functions
 	jQuery.ready();
 }
-
-var isArguments = (function( undefined ) {
-
-	var ostr = toString,
-		// To be sure it will not be inlined (future engines).
-		returnTrue = function() { return arguments !== undefined; },
-		ARGS = ostr.call( arguments );
-
-	return ARGS === "[object Arguments]" ?
-		function( obj ) {
-			return obj != null && ostr.call( obj ) === ARGS;
-		} :
-		function( obj ) {
-			if ( obj != null && obj.length !== undefined && ostr.call( obj ) === ARGS ) {
-				try {
-					return returnTrue.apply( this, obj );
-				} catch (e) {}
-			}
-			return false;
-		};
-})();
 
 // Expose jQuery to the global object
 return jQuery;
