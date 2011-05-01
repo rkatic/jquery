@@ -67,14 +67,16 @@ var jQuery = function( selector, context ) {
 	// [[Class]] -> type pairs
 	class2type = {},
 
-	// FREE IF PULL #366 WILL BE MERGED
+	// **** FREE IF PULL #366 WILL BE MERGED ****
 	argsRudeCheck = (function(){
-		var	ARGS = toString.call( arguments ),
+		var	returnTrue = function() {
 			// To be sure it will not be inlined (future engines).
-			returnTrue = function() { return arguments !== 0; };
+			return arguments !== 0;
+		};
 
-		return function( cls, obj ) {
-			if ( cls === ARGS ) {
+		return function( obj ) {
+			// Using "in" works in strict mode too.
+			if ( "callee" in obj ) {
 				try {
 					return returnTrue.apply( this, obj );
 				} catch (e) {}
@@ -82,6 +84,7 @@ var jQuery = function( selector, context ) {
 			return false;
 		};
 	})();
+	//////////////////////////////////////////////
 
 jQuery.fn = jQuery.prototype = {
 	constructor: jQuery,
@@ -683,7 +686,7 @@ jQuery.extend({
 			// jQuery-like
 			array.jquery && !jQuery.isPlainObject( array ) ||
 			// arguments
-			argsRudeCheck( cls, array ) )
+			argsRudeCheck( array ) )
 		) {
 			jQuery.merge( ret, array );
 
