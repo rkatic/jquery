@@ -65,26 +65,7 @@ var jQuery = function( selector, context ) {
 	indexOf = Array.prototype.indexOf,
 
 	// [[Class]] -> type pairs
-	class2type = {},
-
-	// **** FREE IF PULL #366 WILL BE MERGED ****
-	argsRudeCheck = (function(){
-		var	returnTrue = function() {
-			// To be sure it will not be inlined (future engines).
-			return arguments !== 0;
-		};
-
-		return function( obj ) {
-			// Using "in" works in strict mode too.
-			if ( "callee" in obj ) {
-				try {
-					return returnTrue.apply( this, obj );
-				} catch (e) {}
-			}
-			return false;
-		};
-	})();
-	//////////////////////////////////////////////
+	class2type = {};
 
 jQuery.fn = jQuery.prototype = {
 	constructor: jQuery,
@@ -681,12 +662,12 @@ jQuery.extend({
 		} else if ( array instanceof jQuery || !( cls in class2type ) && !jQuery.isWindow( array ) && (
 			// form,..
 			array.nodeType ||
+			// arguments (using "in" to be sure to not throw exceptions)
+			( "callee" in array ) ||
 			// NodeList
 			array.item && ( array.namedItem || jQuery.isFunction( array.item ) ) ||
 			// jQuery-like
-			array.jquery && !jQuery.isPlainObject( array ) ||
-			// arguments
-			argsRudeCheck( array ) )
+			array.jquery && !jQuery.isPlainObject( array ) )
 		) {
 			jQuery.merge( ret, array );
 
