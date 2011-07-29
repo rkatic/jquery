@@ -424,7 +424,7 @@ jQuery.extend({
 			// Loop variable
 			i,
 			// Fake xhr
-			jqXHR = {
+			jqXHR = new jQuery.extend({
 
 				readyState: 0,
 
@@ -475,7 +475,7 @@ jQuery.extend({
 					done( 0, statusText );
 					return this;
 				}
-			};
+			});
 
 		// Callback for when everything is done
 		// It is defined here because jslint complains if it is declared

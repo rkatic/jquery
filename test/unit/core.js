@@ -290,7 +290,7 @@ test("type", function() {
 });
 
 test("isPlainObject", function() {
-	expect(14);
+	expect(17);
 
 	stop();
 
@@ -352,6 +352,10 @@ test("isPlainObject", function() {
 		ok(true, "new otherObject - iframes not supported");
 		start();
 	}
+
+	ok(!jQuery.isPlainObject(jQuery.Deferred()), "Deferred");
+	ok(!jQuery.isPlainObject(jQuery.Deferred().promise()), "Promise");
+	ok(!jQuery.isPlainObject(jQuery.ajax()), "jqXHR");
 });
 
 test("isFunction", function() {

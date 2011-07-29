@@ -17,7 +17,7 @@ jQuery.extend({
 			// flag to know if the deferred has been cancelled
 			cancelled,
 			// the deferred itself
-			deferred  = {
+			deferred  = new jQuery.extend({
 
 				// done( f1, f2, ...)
 				done: function() {
@@ -84,7 +84,7 @@ jQuery.extend({
 					callbacks = [];
 					return this;
 				}
-			};
+			});
 
 		return deferred;
 	},
@@ -138,7 +138,7 @@ jQuery.extend({
 					if ( promise ) {
 						return promise;
 					}
-					promise = obj = {};
+					promise = obj = new jQuery.noop();
 				}
 				var i = promiseMethods.length;
 				while( i-- ) {
