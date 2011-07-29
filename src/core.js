@@ -73,7 +73,10 @@ var jQuery = function( selector, context ) {
 	indexOf = Array.prototype.indexOf,
 
 	// [[Class]] -> type pairs
-	class2type = {};
+	class2type = {},
+
+	// Used as "empty contructor".
+	F = function() {};
 
 jQuery.fn = jQuery.prototype = {
 	constructor: jQuery,
@@ -366,6 +369,22 @@ jQuery.extend = jQuery.fn.extend = function() {
 };
 
 jQuery.extend({
+	alloc: function( ctor, props ) {
+		F.prototype = ctor.prototype || ctor;
+		var obj = new F();
+		// Relase reference!
+		F.prototype = null;
+
+		// Fast inline extend.
+		if ( props ) {
+			for ( var name in props ) {
+				obj[ name ] = props[ name ];
+			}
+		}
+
+		return obj;
+	},
+
 	noConflict: function( deep ) {
 		if ( window.$ === jQuery ) {
 			window.$ = _$;

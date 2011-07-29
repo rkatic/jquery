@@ -17,7 +17,7 @@ jQuery.extend({
 			// flag to know if the deferred has been cancelled
 			cancelled,
 			// the deferred itself
-			deferred  = {
+			deferred  = jQuery.alloc( jQuery._Deferred, {
 
 				// done( f1, f2, ...)
 				done: function() {
@@ -84,14 +84,14 @@ jQuery.extend({
 					callbacks = [];
 					return this;
 				}
-			};
+			});
 
 		return deferred;
 	},
 
 	// Full fledged deferred (two callbacks list)
 	Deferred: function( func ) {
-		var deferred = jQuery._Deferred(),
+		var deferred = jQuery.alloc( jQuery.Deferred, jQuery._Deferred() ),
 			failDeferred = jQuery._Deferred(),
 			promise;
 		// Add errorDeferred methods, then and promise

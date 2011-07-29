@@ -8,13 +8,15 @@ jQuery.each( [ "", " - new operator" ], function( _, withNew ) {
 
 	test("jQuery._Deferred" + withNew, function() {
 
-		expect( 11 );
+		expect( 12 );
 
 		var deferred,
 			object,
 			test;
 
 		deferred = createDeferred();
+
+		ok( deferred instanceof jQuery._Deferred , "instanceof jQuery._Deferred" );
 
 		test = false;
 
@@ -114,7 +116,9 @@ jQuery.each( [ "", " - new operator" ], function( _, withNew ) {
 
 	test("jQuery.Deferred" + withNew, function() {
 
-		expect( 8 );
+		expect( 9 );
+
+		ok( createDeferred() instanceof jQuery.Deferred , "instanceof jQuery.Deferred" );
 
 		createDeferred().resolve().then( function() {
 			ok( true , "Success on resolve" );
